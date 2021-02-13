@@ -9,15 +9,6 @@ export default function App() {
   const svgRef = useRef();
 
   useEffect(() => {
-    let array = [];
-    d3.csv('/alphabet.csv', ({ letter, frequency }) => {
-      return { name: letter, value: frequency };
-    }).then((d) => setData(d));
-
-    setData(array);
-  }, []);
-
-  useEffect(() => {
     const width = 600;
     const height = 200;
 
@@ -89,32 +80,21 @@ export default function App() {
       .attr('x', (d) => x(d.name))
       .attr('y', (d) => y(d.value))
       .attr('height', (d) => y(0) - y(d.value))
-      .attr('width', x.bandwidth());
+      .attr('width', x.bandwidth())
+      .attr('fill', 'red');
 
     svg.append('g').attr('class', 'x-axis').call(xAxis);
 
     svg.append('g').attr('class', 'y-axis').call(yAxis);
+  }, []);
 
-    return svg.node();
+  useEffect(() => {
+    let array = [];
+    d3.csv('/alphabet.csv', ({ letter, frequency }) => {
+      return { name: letter, value: frequency };
+    }).then((d) => setData(d));
 
-    // -------------------------------
-
-    // const svg = d3
-    //   .select(svgRef.current)
-    //   .attr('width', width)
-    //   .attr('height', height)
-    //   .style('margin-left', 120);
-
-    // svg
-    //   .selectAll('rect')
-    //   .data(data)
-    //   .enter()
-    //   .append('rect')
-    //   .attr('x', (d, i) => i * 50)
-    //   .attr('y', (d, i) => height - 10 * d)
-    //   .attr('width', 30)
-    //   .attr('height', (d, i) => d * 10)
-    //   .attr('fill', 'blue');
+    setData(array);
   }, []);
 
   console.log(data, 'data');
